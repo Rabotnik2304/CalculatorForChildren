@@ -75,7 +75,7 @@ namespace NikoLab22102022
                 Console.WriteLine(String.Join(" ", numberList1));
                 while (numberList1[i] < 0)
                 {
-                    Console.WriteLine("Т.к. при заёмё до , " +
+                    Console.WriteLine("Т.к. при заёмё мы получили отрицательное число " +
                         "производим заём из следующего разряда и увеличиваем {0} на {1} и получаем {2}", numberList1[i], baze, numberList1[i]+baze);
                     numberList1[i] += baze;
                     numberList1[i - 1]--;
