@@ -71,7 +71,7 @@ namespace NikoLab22102022
                     Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i+1, numberList1[i], numberList2[j]);
                     numberList1[i] -= numberList2[j];
                 }
-
+                Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i + 1, numberList1[i], numberList2[j]);
                 Console.WriteLine(String.Join(" ", numberList1));
                 while (numberList1[i] < 0)
                 {
