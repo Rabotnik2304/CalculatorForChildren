@@ -27,144 +27,6 @@ namespace NikoLab22102022
 
     class Program
     {
-        private static string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-        public static void StartVichet()
-        {
-            Console.WriteLine("Введите через пробел два числа, которые вы хотите отнять друг от друга, и систему счисления этих чисел");
-            
-            string vichetReadLine = Console.ReadLine().Trim();
-            string[] vichetSplit = vichetReadLine.Split(" ");
-            Console.WriteLine();
-            if (vichetSplit.Length < 3)
-            {
-                throw new ArgumentException("Вы не ввели все числа");
-            }
-            if (vichetSplit.Length >= 4)
-            {
-                throw new ArgumentException("Вы ввели лишние числа");
-            }
-
-            if (int.TryParse(vichetSplit[2], out int Base))
-                Base = Base;
-            else
-                Console.WriteLine("Ваше число, обозначающее систему счисления некоректно");
-
-
-            Number numVichet1 = new Number(vichetSplit[0], Base);
-            Number numVichet2 = new Number(vichetSplit[1], Base);
-
-            
-
-            CorrectVichet(numVichet1, numVichet2);
-        }
-
-        private static void CorrectVichet(Number numVichet1, Number numVichet2)
-        {
-            string number1 = numVichet1.Value;
-            string number2 = numVichet2.Value;
-            int baze = numVichet2.Base;
-            int NumD1 = FromAnyToDec(number1, baze);
-            int NumD2 = FromAnyToDec(number2, baze);
-
-            string num1 = number1;
-            string num2 = number2;
-            if (NumD1 > NumD2)
-            {
-                number1 = num1;
-                number2 = num2;
-            }
-            else
-            {
-                number1 = num2;
-                number2 = num1;
-            }
-
-            List<char> charList1 = number1.ToCharArray().ToList();
-            List<char> charList2 = number2.ToCharArray().ToList();
-
-            Console.Write(" ");
-            Console.WriteLine(number1);
-            Console.WriteLine("-");
-            Console.Write(" ");
-            for (int i = 0; i < charList1.Count - charList2.Count; i++)
-            {
-                Console.Write("0");
-            }
-            Console.WriteLine(number2);
-            Console.Write(" ");
-            for (int i = 0; i < charList1.Count; i++)
-            {
-                Console.Write("-");
-            }
-            Console.WriteLine();
-
-            List<int> numberList1 = charList1.Select(c => (int)Alphabet.IndexOf(c)).ToList();
-            List<int> numberList2 = charList2.Select(c => (int)Alphabet.IndexOf(c)).ToList();
-            int j;
-
-            Console.WriteLine("Производим поразрядное вычитание:");
-
-            for (int i = numberList1.Count - 1; i >= 0; i--)
-            {
-                j = i - (numberList1.Count - numberList2.Count);
-
-                if (j >= 0)
-                {
-                    Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i + 1, numberList1[i], numberList2[j]);
-                    numberList1[i] -= numberList2[j];
-                }
-
-                if (i >= 1)
-                {   
-                    Console.WriteLine(String.Join(" ", numberList1));
-                }
-
-                while (numberList1[i] < 0)
-                {
-                    Console.WriteLine("Т.к. до этого мы получили отрицательное число " +
-                        "производим заём из следующего разряда и увеличиваем {0} на {1} и получаем {2}", numberList1[i], baze, numberList1[i] + baze);
-                    
-                    numberList1[i] += baze;
-                    numberList1[i - 1]--;
-                    Console.WriteLine(String.Join(" ", numberList1));
-                }
-            }
-            if (numberList1.Count == numberList2.Count)
-            {
-                Console.WriteLine(String.Join(" ", numberList1));
-            }
-            Console.WriteLine();
-            Console.WriteLine("Выведем получившийся ответ в заданной системе счисления:");
-            Console.WriteLine();
-            StringBuilder result = new StringBuilder();
-
-            for (int i = 0; i < numberList1.Count; i++)
-            {
-                result.Append(Alphabet[numberList1[i]]);
-            }
-            Console.Write(" ");
-            Console.WriteLine(number1);
-            Console.WriteLine("-");
-            Console.Write(" ");
-
-            for (int i = 0; i < charList1.Count - charList2.Count; i++)
-            {
-                Console.Write("0");
-            }
-            Console.WriteLine(number2);
-            Console.Write(" ");
-            for (int i = 0; i < charList1.Count; i++)
-            {
-                Console.Write("-");
-            }
-            Console.WriteLine();
-            Console.Write(" ");
-
-            Console.WriteLine(result.ToString());
-        }
-
-
         public static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -503,6 +365,142 @@ namespace NikoLab22102022
             return new Number(res1.ToString(), number1.Base);
         }
 
+        
+        public static void StartVichet()
+        {
+            Console.WriteLine("Введите через пробел два числа, которые вы хотите отнять друг от друга, и систему счисления этих чисел");
+
+            string vichetReadLine = Console.ReadLine().Trim();
+            string[] vichetSplit = vichetReadLine.Split(" ");
+            Console.WriteLine();
+            if (vichetSplit.Length < 3)
+            {
+                throw new ArgumentException("Вы не ввели все числа");
+            }
+            if (vichetSplit.Length >= 4)
+            {
+                throw new ArgumentException("Вы ввели лишние числа");
+            }
+
+            if (int.TryParse(vichetSplit[2], out int Base))
+                Base = Base;
+            else
+                Console.WriteLine("Ваше число, обозначающее систему счисления некоректно");
+
+
+            Number numVichet1 = new Number(vichetSplit[0], Base);
+            Number numVichet2 = new Number(vichetSplit[1], Base);
+
+
+
+            CorrectVichet(numVichet1, numVichet2);
+        }
+
+        private static void CorrectVichet(Number numVichet1, Number numVichet2)
+        {
+            string number1 = numVichet1.Value;
+            string number2 = numVichet2.Value;
+            int baze = numVichet2.Base;
+            int NumD1 = FromAnyToDec(number1, baze);
+            int NumD2 = FromAnyToDec(number2, baze);
+
+            string num1 = number1;
+            string num2 = number2;
+            if (NumD1 > NumD2)
+            {
+                number1 = num1;
+                number2 = num2;
+            }
+            else
+            {
+                number1 = num2;
+                number2 = num1;
+            }
+
+            List<char> charList1 = number1.ToCharArray().ToList();
+            List<char> charList2 = number2.ToCharArray().ToList();
+
+            Console.Write(" ");
+            Console.WriteLine(number1);
+            Console.WriteLine("-");
+            Console.Write(" ");
+            for (int i = 0; i < charList1.Count - charList2.Count; i++)
+            {
+                Console.Write("0");
+            }
+            Console.WriteLine(number2);
+            Console.Write(" ");
+            for (int i = 0; i < charList1.Count; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+
+            List<int> numberList1 = charList1.Select(c => (int)Alphabet.IndexOf(c)).ToList();
+            List<int> numberList2 = charList2.Select(c => (int)Alphabet.IndexOf(c)).ToList();
+            int j;
+
+            Console.WriteLine("Производим поразрядное вычитание:");
+
+            for (int i = numberList1.Count - 1; i >= 0; i--)
+            {
+                j = i - (numberList1.Count - numberList2.Count);
+
+                if (j >= 0)
+                {
+                    Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i + 1, numberList1[i], numberList2[j]);
+                    numberList1[i] -= numberList2[j];
+                }
+
+                if (i >= 1)
+                {
+                    Console.WriteLine(String.Join(" ", numberList1));
+                }
+
+                while (numberList1[i] < 0)
+                {
+                    Console.WriteLine("Т.к. до этого мы получили отрицательное число " +
+                        "производим заём из следующего разряда и увеличиваем {0} на {1} и получаем {2}", numberList1[i], baze, numberList1[i] + baze);
+
+                    numberList1[i] += baze;
+                    numberList1[i - 1]--;
+                    Console.WriteLine(String.Join(" ", numberList1));
+                }
+            }
+            if (numberList1.Count == numberList2.Count)
+            {
+                Console.WriteLine(String.Join(" ", numberList1));
+            }
+            Console.WriteLine();
+            Console.WriteLine("Выведем получившийся ответ в заданной системе счисления:");
+            Console.WriteLine();
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < numberList1.Count; i++)
+            {
+                result.Append(Alphabet[numberList1[i]]);
+            }
+            Console.Write(" ");
+            Console.WriteLine(number1);
+            Console.WriteLine("-");
+            Console.Write(" ");
+
+            for (int i = 0; i < charList1.Count - charList2.Count; i++)
+            {
+                Console.Write("0");
+            }
+            Console.WriteLine(number2);
+            Console.Write(" ");
+            for (int i = 0; i < charList1.Count; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            Console.Write(" ");
+
+            Console.WriteLine(result.ToString());
+        }
+
         public static Number Sum(Number number1, Number number2)
         {
 
@@ -568,6 +566,7 @@ namespace NikoLab22102022
 
             return new Number(res1.ToString(), number1.Base);
         }
+        private static string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
         private static int DigitConvertor(char digit, int Base)
         {
