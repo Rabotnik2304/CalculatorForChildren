@@ -29,14 +29,41 @@ namespace NikoLab22102022
     {
         private static string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-        public static void Main()
+        public static void StartVichet()
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            string number1 = Console.ReadLine();
-            string number2 = Console.ReadLine();
-            int baze = int.Parse(Console.ReadLine());
+            Console.WriteLine("Введите через пробел два числа, которые вы хотите отнять друг от друга, и систему счисления этих чисел");
+            
+            string vichetReadLine = Console.ReadLine().Trim();
+            string[] vichetSplit = vichetReadLine.Split(" ");
+            Console.WriteLine();
+            if (vichetSplit.Length < 3)
+            {
+                throw new ArgumentException("Вы не ввели все числа");
+            }
+            if (vichetSplit.Length >= 4)
+            {
+                throw new ArgumentException("Вы ввели лишние числа");
+            }
+
+            if (int.TryParse(vichetSplit[2], out int Base))
+                Base = Base;
+            else
+                Console.WriteLine("Ваше число, обозначающее систему счисления некоректно");
+
+
+            Number numVichet1 = new Number(vichetSplit[0], Base);
+            Number numVichet2 = new Number(vichetSplit[1], Base);
 
             
+
+            CorrectVichet(numVichet1, numVichet2);
+        }
+
+        private static void CorrectVichet(Number numVichet1, Number numVichet2)
+        {
+            string number1 = numVichet1.Value;
+            string number2 = numVichet2.Value;
+            int baze = numVichet2.Base;
             int NumD1 = FromAnyToDec(number1, baze);
             int NumD2 = FromAnyToDec(number2, baze);
 
@@ -56,121 +83,160 @@ namespace NikoLab22102022
             List<char> charList1 = number1.ToCharArray().ToList();
             List<char> charList2 = number2.ToCharArray().ToList();
 
+            Console.Write(" ");
+            Console.WriteLine(number1);
+            Console.WriteLine("-");
+            Console.Write(" ");
+            for (int i = 0; i < charList1.Count - charList2.Count; i++)
+            {
+                Console.Write("0");
+            }
+            Console.WriteLine(number2);
+            Console.Write(" ");
+            for (int i = 0; i < charList1.Count; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+
             List<int> numberList1 = charList1.Select(c => (int)Alphabet.IndexOf(c)).ToList();
             List<int> numberList2 = charList2.Select(c => (int)Alphabet.IndexOf(c)).ToList();
             int j;
-            Console.WriteLine("Производим поразрядное вычитание:");
 
+            Console.WriteLine("Производим поразрядное вычитание:");
 
             for (int i = numberList1.Count - 1; i >= 0; i--)
             {
                 j = i - (numberList1.Count - numberList2.Count);
-                
+
                 if (j >= 0)
                 {
-                    Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i+1, numberList1[i], numberList2[j]);
+                    Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i + 1, numberList1[i], numberList2[j]);
                     numberList1[i] -= numberList2[j];
                 }
-                Console.WriteLine("В разряде {0}, мы вычитаем из {1} {2} и получаем:", i + 1, numberList1[i], numberList2[j]);
-                Console.WriteLine(String.Join(" ", numberList1));
-                while (numberList1[i] < 0)
-                {
-                    Console.WriteLine("Т.к. при заёмё мы получили отрицательное число " +
-                        "производим заём из следующего разряда и увеличиваем {0} на {1} и получаем {2}", numberList1[i], baze, numberList1[i]+baze);
-                    numberList1[i] += baze;
-                    numberList1[i - 1]--;
+
+                if (i >= 1)
+                {   
+                    Console.WriteLine(String.Join(" ", numberList1));
                 }
 
-                
-
+                while (numberList1[i] < 0)
+                {
+                    Console.WriteLine("Т.к. до этого мы получили отрицательное число " +
+                        "производим заём из следующего разряда и увеличиваем {0} на {1} и получаем {2}", numberList1[i], baze, numberList1[i] + baze);
+                    
+                    numberList1[i] += baze;
+                    numberList1[i - 1]--;
+                    Console.WriteLine(String.Join(" ", numberList1));
+                }
             }
-
+            if (numberList1.Count == numberList2.Count)
+            {
+                Console.WriteLine(String.Join(" ", numberList1));
+            }
+            Console.WriteLine();
+            Console.WriteLine("Выведем получившийся ответ в заданной системе счисления:");
+            Console.WriteLine();
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < numberList1.Count; i++)
             {
                 result.Append(Alphabet[numberList1[i]]);
             }
+            Console.Write(" ");
+            Console.WriteLine(number1);
+            Console.WriteLine("-");
+            Console.Write(" ");
 
-            Console.WriteLine(result.ToString().TrimStart('0'));
+            for (int i = 0; i < charList1.Count - charList2.Count; i++)
+            {
+                Console.Write("0");
+            }
+            Console.WriteLine(number2);
+            Console.Write(" ");
+            for (int i = 0; i < charList1.Count; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            Console.Write(" ");
+
+            Console.WriteLine(result.ToString());
         }
 
 
+        public static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            while (true)
+            {
+                Console.WriteLine("Эта программа сделана Кожурковым Георгием Львовичем из группы При-102");
+                Console.WriteLine("Примечание: Данная программа не поддерживает операции с числами большими 2 147 483 647");
+                Console.WriteLine("Алфавит для 50-ричной системы счисления: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn");
 
+                Console.WriteLine();
+                Console.WriteLine("Нажмите 1 чтобы из любой системы счисления перевести в любую систему счисения");
+                Console.WriteLine("Нажмите 2 чтобы перевести любое число меньше или равное 5000 из десятичной системы счисления в римскую систему счисления");
+                Console.WriteLine("Нажмите 3 чтобы перевести любое число меньше или равное 5000 из римской системы счисления в десятичную систему счисления");
+                Console.WriteLine("Нажмите 4 чтобы проссумировать два числа в одной системе счисления");
+                Console.WriteLine("Нажмите 5 чтобы отнять одно число от другого в одной системе счисления");
+                Console.WriteLine("Нажмите 6 чтобы перемножить два числа в одной системе счисления");
+                Console.Write("Введите операцию:");
 
-        //public static void Main(string[] args)
-        //{
-        //    Console.OutputEncoding = System.Text.Encoding.UTF8;
+                string operation = Console.ReadLine().Trim();
+                Console.WriteLine();
 
-        //    while (true)
-        //    {
-        //        Console.WriteLine("Эта программа сделана Кожурковым Георгием Львовичем из группы При-102");
-        //        Console.WriteLine("Примечание: Данная программа не поддерживает операции с числами большими 2 147 483 647");
-        //        Console.WriteLine("Алфавит для 50-ричной системы счисления: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn");
-
-        //        Console.WriteLine();
-        //        Console.WriteLine("Нажмите 1 чтобы из любой системы счисления перевести в любую систему счисения");
-        //        Console.WriteLine("Нажмите 2 чтобы перевести любое число меньше или равное 5000 из десятичной системы счисления в римскую систему счисления");
-        //        Console.WriteLine("Нажмите 3 чтобы перевести любое число меньше или равное 5000 из римской системы счисления в десятичную систему счисления");
-        //        Console.WriteLine("Нажмите 4 чтобы проссумировать два числа в одной системе счисления");
-        //        Console.WriteLine("Нажмите 5 чтобы отнять одно число от другого в одной системе счисления");
-        //        Console.WriteLine("Нажмите 6 чтобы перемножить два числа в одной системе счисления");
-        //        Console.Write("Введите операцию:");
-
-        //        string operation = Console.ReadLine().Trim();
-        //        Console.WriteLine();
-
-        //        try
-        //        {
-        //            if (operation == "1")
-        //            {
-        //                ConverterStart();
-        //            }
-        //            else if (operation == "2")
-        //            {
-        //                ToRomanStart();
-        //            }
-        //            else if (operation == "3")
-        //            {
-        //                RomanToDecimalStart();
-        //            }
-        //            else if (operation == "4")
-        //            {
-        //                SumStart();
-        //            }
-        //            else if (operation == "5")
-        //            {
-        //                Console.WriteLine("Мы не можем сделать эту операцию");
-        //            }
-        //            else if (operation == "6")
-        //            {
-        //                MultiplicationStart();
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine();
-        //                Console.WriteLine("Мы не можем сделать эту операцию");
-        //            }
-        //        }
-        //        catch (ArgumentException ex)
-        //        {
-        //            Console.WriteLine();
-        //            Console.Write("Ошибка:");
-        //            Console.WriteLine(ex.Message);
-        //        }
-        //        Console.WriteLine();
-        //        Console.WriteLine("Вы хотите продолжить работу с Калькулятором, введите 1 если да, и любой другой символ если нет");
-        //        string operationEnd = Console.ReadLine();
-        //        if (operationEnd != "1")
-        //        {
-        //            Console.Clear();
-        //            Console.WriteLine("Калькулятор закончил работу");
-        //            break;
-        //        }
-        //        Console.Clear();
-        //    }
-        //}
+                try
+                {
+                    if (operation == "1")
+                    {
+                        ConverterStart();
+                    }
+                    else if (operation == "2")
+                    {
+                        ToRomanStart();
+                    }
+                    else if (operation == "3")
+                    {
+                        RomanToDecimalStart();
+                    }
+                    else if (operation == "4")
+                    {
+                        SumStart();
+                    }
+                    else if (operation == "5")
+                    {
+                        StartVichet();
+                    }
+                    else if (operation == "6")
+                    {
+                        MultiplicationStart();
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Мы не можем сделать эту операцию");
+                    }
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine();
+                    Console.Write("Ошибка:");
+                    Console.WriteLine(ex.Message);
+                }
+                Console.WriteLine();
+                Console.WriteLine("Вы хотите продолжить работу с Калькулятором, введите 1 если да, и любой другой символ если нет");
+                string operationEnd = Console.ReadLine();
+                if (operationEnd != "1")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Калькулятор закончил работу");
+                    break;
+                }
+                Console.Clear();
+            }
+        }
 
         private static void SumStart()
         {
