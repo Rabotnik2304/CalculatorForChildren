@@ -161,6 +161,7 @@ namespace NikoLab22102022
 
             string rumalf = string.Join(" ", rum);
 
+            Console.WriteLine("Идем по числу {0} слева на право и последовательно переводим элементы этого числа из римских цифр в десятичные числа",romNumber);
             foreach (char rom in romNumber)
             {
                 if (!rumalf.Contains(rom))
@@ -177,20 +178,24 @@ namespace NikoLab22102022
 
                     if (rumalf.Contains(CmLike))
                     {
+                        Console.WriteLine("Число {0} в римской системе счисления это число {1} в десятичной системе счисления", CmLike, nums[Array.IndexOf(rum, CmLike)]);
                         res += nums[Array.IndexOf(rum, CmLike)];
                         i++;
                     }
                     else
                     {
+                        Console.WriteLine("Число {0} в римской системе счисления это число {1} в десятичной системе счисления", romNumber[i], nums[Array.IndexOf(rum, romNumber[i].ToString())]);
                         res += nums[Array.IndexOf(rum, romNumber[i].ToString())];
                     }
                 }
                 else
                 {
+                    Console.WriteLine("Число {0} в римской системе счисления это число {1} в десятичной системе счисления", romNumber[i], nums[Array.IndexOf(rum, romNumber[i].ToString())]);
                     res += nums[Array.IndexOf(rum, romNumber[i].ToString())];
                 }
 
             }
+            Console.Write("Суммируем полученные числа и получаем ");
             if (res > 5000)
             {
                 throw new ArgumentException("Число должно быть меньше или равно 5000");
@@ -589,18 +594,70 @@ namespace NikoLab22102022
             if (number > 5000)
                 throw new ArgumentException("Число должно быть меньше или равно 5000");
 
-            StringBuilder result = new StringBuilder();
+            Console.WriteLine("Последовательно отнимаем от числа {0} максимальные римские цифры, такие что их разность с числом {0}>=0",number);
 
+            StringBuilder result = new StringBuilder();
+            
             for (int i = 0; i < nums.Length && number != 0; i++)
             {
                 while (number >= nums[i])
-                {
+                {   
+                    Console.WriteLine("Максимальным числом из римской системы счисления, разница которого с числом {0} >=0 будет число {1}", number, rum[i]);
                     number -= nums[i];
                     result.Append(rum[i]);
+
+                }
+            }
+            Console.Write("Записываем полученные числа из римской системы счисления в одно число и получаем ");
+            return result.ToString();
+        }
+
+        static int RightFromAnyToDec(string number, int baze)
+        {
+            Console.WriteLine();
+
+            Console.WriteLine("Перeводим число {0} из {1} системы счисления в десятичную систему счисления",number, baze);
+
+            Console.WriteLine();
+
+            Console.WriteLine("Последовательно проходимся по числу {0} с лева на право и строим его в десятичной системе счисления",number);
+            if (baze > 50)
+                throw new ArgumentException("Система счисления должна быть меньше или равна 50");
+
+            long result = 0;
+            int digitsCount = number.Length;
+            int num;
+            number = new string(number.Reverse().ToArray());
+            for (int i = 0; i < digitsCount; i++)
+            {
+                char c = number[i];
+
+                if (c >= '0' && c <= '9')
+                    num = c - '0';
+                else if (c >= 'A' && c <= 'Z')
+                    num = c - 'A' + 10;
+                else if (c >= 'a' && c <= 'z')
+                    num = c - 'a' + (('Z' - 'A') + 1) + 10;
+                else throw new ArgumentException("Строка содержит символ не корректный для данной системы счисления");
+
+                if (num >= baze)
+                    throw new ArgumentException("Строка содержит символ не корректный для данной системы счисления");
+
+                Console.Write("Добавим к числу {0} {1}*{2}^{3} и получим ",result,num,baze,i);
+
+                
+                result += num * (long)Math.Pow(baze,i);
+
+                Console.WriteLine(result);
+                
+                if (result > 2147483647)
+                {
+                    throw new ArgumentException("Ваше число слишком большое, см. примечание");
                 }
             }
 
-            return result.ToString();
+            Console.WriteLine("Мы получили наше число в десятичной системе счисления: {0}",result);
+            return (int)result;
         }
 
         static int FromAnyToDec(string number, int baze)
@@ -638,7 +695,6 @@ namespace NikoLab22102022
 
             return (int)result;
         }
-
         static string FromDecToAny(int number, int baze)
         {
             if (baze > 50)
@@ -661,6 +717,36 @@ namespace NikoLab22102022
             return string.Join("", builder.ToString().Reverse());
         }
 
+        static string RightFromDecToAny(int number, int baze)
+        {
+            Console.WriteLine();
+
+            Console.WriteLine("Переводим число {0} из десятичной системы счисления в {1} систему счисления", number, baze);
+            if (baze > 50)
+                throw new ArgumentException("Система счисления должна быть меньше или равна 50");
+            StringBuilder builder = new StringBuilder();
+
+            Console.WriteLine("Последовательно находим остатки от деления числа {0} на число {1}, до тех пор пока деление возможно", number, baze);
+            do
+            {
+                int mod = number % baze;
+                char c = ConvertToSymbol(mod);
+                Console.WriteLine("Остаток от деления числа {0} на {1} равен {2}",number,baze, mod);
+                builder.Append(c);
+                number /= baze;
+            } while (number >= baze);
+
+            Console.WriteLine("Т.к. деление числа {0} на число {1} больше невозможно, то последним остатком будет само число {0}", number, baze);
+            if (number != 0)
+            {   
+
+                builder.Append(ConvertToSymbol(number));
+            }
+            Console.WriteLine();
+            Console.WriteLine("Записываем получившиеся остатки от деления задом на перёд, попутно переводя их в элементы {0} системы счисления",baze);
+            Console.Write("Итоговый ответ: ");
+            return string.Join("", builder.ToString().Reverse());
+        }
         private static char ConvertToSymbol(int mod)
         {
             char a = 'A';
@@ -677,8 +763,8 @@ namespace NikoLab22102022
 
         public static Number ConvertNotation(Number number, int targetBaze)
         {
-            int dec = FromAnyToDec(number.Value, number.Base);
-            string targetValue = FromDecToAny(dec, targetBaze);
+            int dec = RightFromAnyToDec(number.Value, number.Base);
+            string targetValue = RightFromDecToAny(dec, targetBaze);
             return new Number(targetValue, targetBaze);
         }
     }
