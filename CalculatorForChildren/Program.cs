@@ -250,7 +250,7 @@ namespace NikoLab22102022
 
         public static Number Multiplication(Number number1, Number number2)
         {
-
+            Console.WriteLine("Умножаем большее на меньшее");
             StringBuilder Multiplication = new StringBuilder();
 
             string num1 = number1.Value;
@@ -305,6 +305,8 @@ namespace NikoLab22102022
         public static Number CorrectSum(Number number1, Number number2)
         {
 
+            Console.WriteLine("Cуммируем большее с меньшим");
+
             StringBuilder sum = new StringBuilder();
 
             string num1 = number1.Value;
@@ -331,10 +333,22 @@ namespace NikoLab22102022
                 minNum = num1;
             }
 
+            Console.Write(" ");
+            Console.WriteLine(maxNum);
+            Console.WriteLine("+");
+            Console.Write(" ");
+            
+            Console.WriteLine(minNum.PadLeft(len));
+            Console.Write(" ");
+            for (int i = 0; i < len; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
 
             maxNum = new string(maxNum.Reverse().ToArray());
             minNum = new string(minNum.Reverse().ToArray());
-
+            Console.WriteLine("Производим посимвольное сложение");
             int des = 0;
             for (int i = 0; i < len; i++)
             {
@@ -345,28 +359,63 @@ namespace NikoLab22102022
                     digit2 = DigitConvertor(minNum[i], base1);
 
                 res = des + digit1 + digit2;
+                if (des == 0)
+                {
+                    Console.WriteLine("Складываем числа {0} и {1}, переведенные в 10 систему счисления", digit1, digit2);
+                }
+                else
+                {
+                    Console.WriteLine("Складываем числа {0} и {1}, переведенные в 10 систему счисления, и добавляем к ним 1 из прошлого разряда", digit1, digit2);
+                }
 
+                Console.WriteLine(res);
+                
                 if (res >= base1)
                 {
+
                     sum.Append(ConvertToSymbol(res - base1));
                     if (i == len - 1)
                     {
+                        Console.WriteLine("Т.к. у нас получилось число большее чем {0} и это последнее число в сложениии то мы пишем число {1}, переведенное в {0} систему счисления - {2} и дописываем слева 1", base1, res - base1, ConvertToSymbol(res - base1));
                         sum.Append("1");
+
                     }
                     else
                     {
+                        Console.WriteLine("Т.к. у нас получилось число большее чем {0}, то мы пишем число {1}, переведенное в {0} систему счисления - {2} и добаляем 1 к следующему разряду", base1, res - base1, ConvertToSymbol(res - base1));
                         des = 1;
                     }
                 }
                 else
                 {
+                    Console.WriteLine("Т.к. у нас получилось число меньшее чем {0}, то мы пишем число {1}, переведенное в {0} систему счисления - {2}", base1, res, ConvertToSymbol(res));
                     des = 0;
                     sum.Append(ConvertToSymbol(res));
                 }
             }
+
+            maxNum = new string(maxNum.Reverse().ToArray());
+            minNum = new string(minNum.Reverse().ToArray());
             string res1 = sum.ToString();
             res1 = new string(res1.Reverse().ToArray());
+            int lenRes= res1.Length;
 
+
+
+            Console.Write(" ");
+            Console.WriteLine(maxNum.PadLeft(lenRes));
+            Console.WriteLine("+");
+            Console.Write(" ");
+
+            Console.WriteLine(minNum.PadLeft(lenRes));
+            Console.Write(" ");
+            for (int i = 0; i < lenRes; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            Console.Write(" ");
+            
             return new Number(res1.ToString(), number1.Base);
         }
 
@@ -403,6 +452,7 @@ namespace NikoLab22102022
 
         private static void CorrectVichet(Number numVichet1, Number numVichet2)
         {
+            Console.WriteLine("Вычитаем из большего меньшее");
             string number1 = numVichet1.Value;
             string number2 = numVichet2.Value;
             int baze = numVichet2.Base;
