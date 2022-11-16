@@ -124,7 +124,7 @@ namespace NikoLab22102022
             Number numSum1 = new Number(sumSplit[0], Base);
             Number numSum2 = new Number(sumSplit[1], Base);
 
-            Console.WriteLine(CorrectSum(numSum1, numSum2));
+            CorrectSum(numSum1, numSum2);
         }
 
         private static void MultiplicationStart()
@@ -263,42 +263,136 @@ namespace NikoLab22102022
             int len = 0;
             string maxNum = "";
             string minNum = "";
-
+            int len2 = 0;
             if (NumD1 < NumD2)
             {
                 len = num1.Length;
+                len2 = num2.Length;
                 minNum = num1;
                 maxNum = num2;
             }
             else
             {
                 len = num2.Length;
+                len2= num1.Length;
                 minNum = num2;
                 maxNum = num1;
             }
 
-            minNum = new string(minNum.Reverse().ToArray());
+            Console.Write(" ");
+            Console.WriteLine(maxNum);
+            Console.WriteLine("*");
+            Console.Write(" ");
 
-            string res1 = "";
+            Console.WriteLine(minNum.PadLeft(len2));
+            Console.Write(" ");
+            for (int i = 0; i < len2; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+
+            minNum = new string(minNum.Reverse().ToArray());
+            Console.WriteLine("Последовательно производим умножение большего числа на цифры меньшего");
+            List<string> listOfSum = new List<string>();
+            
+            int maxAnswLen=0;
             for (int i = 0; i < len; i++)
             {
                 int digit2 = DigitConvertor(minNum[i], base1);
 
-                string mul1 = "";
-
-                for (int j = 0; j < digit2; j++)
-                {
-                    mul1 = Sum(new Number(mul1, base1), new Number(maxNum, base1)).Value;
-                }
+                string mul1 = "0";
+                Console.WriteLine("Чтобы умножить {0} на {1} нужно сложить его {1} раз", maxNum, digit2);
+                Console.WriteLine("Вы хотите посмотреть процесс сложения? Если да - введите 1");
+                string a = Console.ReadLine();
                 string mn = "";
-                for (int j = 0; j < i; j++)
+                if (a!="1")
                 {
-                    mn += "0";
+                    for (int j = 0; j < digit2; j++)
+                    {
+                        mul1 = Sum(new Number(mul1, base1), new Number(maxNum, base1)).Value;
+                    }
+                    
+                    for (int j = 0; j < i; j++)
+                    {
+                        mn += "0";
+                    }
                 }
+                else
+                {
+                    for (int j = 0; j < digit2; j++)
+                    {
+                        mul1 = CorrectSum(new Number(mul1, base1), new Number(maxNum, base1)).Value;
+                    }
+                    
+                    for (int j = 0; j < i; j++)
+                    {
+                        mn += "0";
+                    }
+                }
+                Console.WriteLine();
+                Console.WriteLine("Пишем получившуюся сумму, дописывая с зади {0} нулей", mn.Length);
                 Console.WriteLine(mul1 + mn);
-                res1 = Sum(new Number(res1, base1), new Number(mul1 + mn, base1)).Value;
-            }
+                Console.WriteLine();
 
+                maxAnswLen = Math.Max(maxAnswLen, (mul1 + mn).Length);
+                listOfSum.Add(mul1 + mn); 
+            }
+            minNum = new string(minNum.Reverse().ToArray());
+            Console.Write(" ");
+            Console.WriteLine(maxNum.PadLeft(maxAnswLen));
+            Console.WriteLine("*");
+            Console.Write(" ");
+
+            Console.WriteLine(minNum.PadLeft(maxAnswLen));
+            Console.Write(" ");
+            for (int i = 0; i < maxAnswLen; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            foreach (var c in listOfSum)
+            {
+                Console.WriteLine(c.PadLeft(maxAnswLen+1));
+            }
+            Console.Write(" ");
+            for (int i = 0; i < maxAnswLen; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Теперь, получившиеся суммы нужно сложить и мы получим ответ");
+            string res1 = listOfSum[0];
+            for (int c=1;c<listOfSum.Count;c++)
+            {   
+                res1 = CorrectSum(new Number(res1, base1), new Number(listOfSum[c], base1)).Value;
+            }
+            Console.WriteLine();
+            Console.WriteLine("Итоговый ответ:");
+
+            Console.Write(" ");
+            Console.WriteLine(maxNum.PadLeft(maxAnswLen));
+            Console.WriteLine("*");
+            Console.Write(" ");
+
+            Console.WriteLine(minNum.PadLeft(maxAnswLen));
+            Console.Write(" ");
+            for (int i = 0; i < maxAnswLen; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            foreach (var c in listOfSum)
+            {
+                Console.WriteLine(c.PadLeft(maxAnswLen + 1));
+            }
+            Console.Write(" ");
+            for (int i = 0; i < maxAnswLen; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine();
+            Console.Write(" ");
             return new Number(res1.ToString(), number1.Base);
         }
 
@@ -415,6 +509,7 @@ namespace NikoLab22102022
             }
             Console.WriteLine();
             Console.Write(" ");
+            Console.WriteLine(res1);
             
             return new Number(res1.ToString(), number1.Base);
         }
